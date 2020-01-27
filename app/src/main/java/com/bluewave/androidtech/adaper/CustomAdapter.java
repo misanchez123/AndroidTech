@@ -2,11 +2,10 @@ package com.bluewave.androidtech.adaper;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bluewave.androidtech.R;
+import com.bluewave.androidtech.databinding.ItemRecyclerMainBinding;
 import com.bluewave.androidtech.model.User;
 
 import java.util.List;
@@ -21,15 +20,15 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recycler_main, parent, false);
-        return new MyViewHolder(view);
+        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+        ItemRecyclerMainBinding itemBinding = ItemRecyclerMainBinding.inflate(layoutInflater, parent, false);
+        return new MyViewHolder(itemBinding);
     }
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        holder.tvTitle.setText(userList.get(position).getTitle());
-        holder.tvId.setText(userList.get(position).getId()+"");
-        holder.tvBody.setText(userList.get(position).getBody());
+        User user = userList.get(position);
+        holder.bind(user);
     }
 
     @Override
@@ -38,12 +37,18 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
+
+        private ItemRecyclerMainBinding binding;
         TextView tvId, tvTitle, tvBody;
-        public MyViewHolder(View itemView) {
-            super(itemView);
-            tvId = (TextView) itemView.findViewById(R.id.user_id);
-            tvTitle = (TextView) itemView.findViewById(R.id.user_title);
-            tvBody = (TextView) itemView.findViewById(R.id.user_body);
+
+        public MyViewHolder(ItemRecyclerMainBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
+
+        public void bind(User user) {
+            binding.setUser(user);
+            binding.executePendingBindings();
         }
     }
 }
